@@ -1,0 +1,10 @@
+# Image dataset CLEVR based on https://github.com/deepmind/multi_object_datasets .
+defaults:
+  - webdataset
+
+train_shards: "/home/ubuntu/clevr_with_masks_new_splits/train/shard-{000000..000114}.tar"
+train_size: 70000
+val_shards: "/home/ubuntu/clevr_with_masks_new_splits/val/shard-{000000..000024}.tar"
+val_size: 15000
+test_shards: "/home/ubuntu/clevr_with_masks_new_splits/test/shard-{000000..000024}.tar"
+test_size: 15000

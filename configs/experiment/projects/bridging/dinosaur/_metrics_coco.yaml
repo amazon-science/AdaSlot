@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+  - /metrics/ari_metric@evaluation_metrics.instance_mask_ari
+  - /metrics/unsupervised_mask_iou_metric@evaluation_metrics.instance_abo
+  - /metrics/mask_corloc_metric@evaluation_metrics.instance_mask_corloc
+
+evaluation_metrics:
+  instance_mask_ari:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    foreground: False
+    convert_target_one_hot: True
+    ignore_overlaps: True
+  instance_abo:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    use_threshold: False
+    matching: best_overlap
+    ignore_overlaps: True
+  instance_mask_corloc:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    use_threshold: False
+    ignore_overlaps: True
+

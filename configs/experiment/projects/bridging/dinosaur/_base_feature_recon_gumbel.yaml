@@ -1,0 +1,94 @@
+# @package _global_
+# Default parameters for slot attention with a ViT decoder for feature reconstruction.
+defaults:
+  - /experiment/_output_path
+  - /training_config
+  - /feature_extractor/timm_model@models.feature_extractor
+  - /perceptual_grouping/slot_attention_gumbel_v1@models.perceptual_grouping
+  - /plugins/optimization@plugins.optimize_parameters
+  - /optimizers/adam@plugins.optimize_parameters.optimizer
+  - /lr_schedulers/exponential_decay@plugins.optimize_parameters.lr_scheduler
+  - _self_
+
+trainer:
+  gradient_clip_val: 1.0
+
+models:
+  feature_extractor:
+    model_name: vit_small_patch16_224_dino
+    pretrained: false
+    freeze: true
+    feature_level: 12
+
+  perceptual_grouping:
+    input_dim: 384
+    feature_dim: ${.object_dim}
+    object_dim: ${models.conditioning.object_dim}
+    use_projection_bias: false
+    positional_embedding:
+      _target_: ocl.neural_networks.wrappers.Sequential
+      _args_:
+        - _target_: ocl.neural_networks.positional_embedding.DummyPositionEmbed
+        - _target_: ocl.neural_networks.build_two_layer_mlp
+          input_dim: ${....input_dim}
+          output_dim: ${....feature_dim}
+          hidden_dim: ${....input_dim}
+          initial_layer_norm: true
+    ff_mlp:
+      _target_: ocl.neural_networks.build_two_layer_mlp
+      input_dim: ${..object_dim}
+      output_dim: ${..object_dim}
+      hidden_dim: "${eval_lambda:'lambda dim: 4 * dim', ${..object_dim}}"
+      initial_layer_norm: true
+      residual: true
+    single_gumbel_score_network: 
+      _target_: ocl.neural_networks.build_two_layer_mlp
+      input_dim: ${..object_dim}
+      output_dim: 2
+      hidden_dim: "${eval_lambda:'lambda dim: 4 * dim', ${..object_dim}}"
+      initial_layer_norm: true
+      residual: false
+  object_decoder:
+    object_dim: ${models.perceptual_grouping.object_dim}
+    output_dim: ${models.perceptual_grouping.input_dim}
+    num_patches: 196
+    object_features_path: perceptual_grouping.objects
+    target_path: feature_extractor.features
+    image_path: input.image
+
+plugins:
+  optimize_parameters:
+    optimizer:
+      lr: 0.0004
+    lr_scheduler:
+      decay_rate: 0.5
+      decay_steps: 100000
+      warmup_steps: 10000
+
+losses:
+  mse:
+    _target_: ocl.losses.ReconstructionLoss
+    loss_type: mse
+    input_path: object_decoder.reconstruction
+    target_path: object_decoder.target  # Object decoder does some resizing.
+
+
+visualizations:
+  input:
+    _target_: ocl.visualizations.Image
+    denormalization:
+      _target_: ocl.preprocessing.Denormalize
+      mean: [0.485, 0.456, 0.406]
+      std: [0.229, 0.224, 0.225]
+    image_path: input.image
+  masks:
+    _target_: ocl.visualizations.Mask
+    mask_path: object_decoder.masks_as_image
+  pred_segmentation:
+    _target_: ocl.visualizations.Segmentation
+    denormalization:
+      _target_: ocl.preprocessing.Denormalize
+      mean: [0.485, 0.456, 0.406]
+      std: [0.229, 0.224, 0.225]
+    image_path: input.image
+    mask_path: object_decoder.masks_as_image

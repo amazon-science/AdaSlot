@@ -1,0 +1,51 @@
+# @package _global_
+defaults:
+  - /experiment/slot_attention/_base_gumbel
+  - /dataset: clevr
+  - /experiment/slot_attention/_preprocessing_clevr
+  - /experiment/slot_attention/_metrics_clevr
+  - /metrics/tensor_statistic@training_metrics.hard_keep_decision
+  - /metrics/tensor_statistic@training_metrics.slots_keep_prob
+  - _self_
+
+# The following parameters assume training on 8 GPUs, leading to an effective batch size of 64.
+trainer:
+  gpus: 8
+  max_steps: 500000
+  max_epochs: null
+  strategy: ddp
+dataset:
+  num_workers: 4
+  batch_size: 8
+
+models:
+  _target_: ocl.models.image_grouping_adaslot_pixel.GroupingImgGumbel
+  conditioning:
+    n_slots: 11
+  
+  perceptual_grouping:
+    low_bound: 0
+
+  object_decoder:
+    _target_: ocl.decoding.SlotAttentionDecoderGumbel
+    left_mask_path: None
+    mask_type: mask_normalized
+
+losses:
+  sparse_penalty:
+    _target_: ocl.losses.SparsePenalty
+    linear_weight: 10
+    quadratic_weight: 0.0
+    quadratic_bias: 0.5
+    input_path: hard_keep_decision
+
+training_metrics:
+  hard_keep_decision:
+    path: hard_keep_decision
+    reduction: sum
+  
+  slots_keep_prob:
+    path: slots_keep_prob
+    reduction: mean
+
+load_model_weight: /home/ubuntu/GitLab/bags-of-tricks/object-centric-learning-models/outputs/slot_attention/clevr10.yaml/2023-05-11_11-51-55/lightning_logs/version_0/checkpoints/epoch=457-step=500000.ckpt

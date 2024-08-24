@@ -1,0 +1,18 @@
+# @package _global_
+# Image dataset containing instances from CLEVR with at most 6 objects in each scene.
+defaults:
+  - clevr_old_splits@dataset
+  - /plugins/subset_dataset@plugins.01_clevr6_subset
+  - _self_
+
+dataset:
+  # Values derived from running `bin/compute_dataset_size.py`
+  train_size: 29948
+  val_size: 3674
+  test_size: 3771
+
+plugins:
+  01_clevr6_subset:
+    predicate: "${lambda_fn:'lambda visibility: visibility.sum() < 7'}"
+    fields:
+      - visibility

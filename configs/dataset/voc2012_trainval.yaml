@@ -1,0 +1,102 @@
+# The PASCAL VOC 2012 dataset, using joint train+val splits for training and validation.
+# This setting is often used in the unsupervised case.
+defaults:
+  - webdataset
+
+train_shards:
+  - ${dataset_prefix:"voc2012_detection/train/shard-000000.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000001.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000002.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000003.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000004.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000005.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000006.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000007.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000008.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000009.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000010.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000011.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000012.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000013.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000014.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000015.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000016.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000017.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000018.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000019.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000020.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000021.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000000.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000001.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000002.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000003.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000004.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000005.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000006.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000007.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000008.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000009.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000010.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000011.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000012.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000013.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000014.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000015.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000016.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000017.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000018.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000019.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000020.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000021.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000022.tar"}
+train_size: 11540
+val_shards:
+  - ${dataset_prefix:"voc2012_detection/train/shard-000000.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000001.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000002.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000003.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000004.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000005.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000006.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000007.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000008.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000009.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000010.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000011.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000012.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000013.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000014.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000015.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000016.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000017.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000018.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000019.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000020.tar"}
+  - ${dataset_prefix:"voc2012_detection/train/shard-000021.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000000.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000001.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000002.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000003.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000004.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000005.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000006.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000007.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000008.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000009.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000010.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000011.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000012.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000013.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000014.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000015.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000016.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000017.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000018.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000019.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000020.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000021.tar"}
+  - ${dataset_prefix:"voc2012_detection/val/shard-000022.tar"}
+val_size: 11540
+test_shards: ${dataset_prefix:"voc2012_detection/test/shard-{000000..000041}.tar"}
+test_size: 10991
+use_autopadding: true

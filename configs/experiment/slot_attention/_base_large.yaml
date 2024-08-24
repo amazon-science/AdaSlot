@@ -1,0 +1,93 @@
+# @package _global_
+# Default parameters for slot attention on resolution 128x128 with a ResNet encoder
+defaults:
+  - /experiment/_output_path
+  - /training_config
+  - /feature_extractor/timm_model@models.feature_extractor
+  - /perceptual_grouping/slot_attention@models.perceptual_grouping
+  - /plugins/optimization@plugins.optimize_parameters
+  - /optimizers/adam@plugins.optimize_parameters.optimizer
+  - /lr_schedulers/cosine_annealing@plugins.optimize_parameters.lr_scheduler
+  - _self_
+
+models:
+  feature_extractor:
+    model_name: resnet34_savi
+    feature_level: 4
+    pretrained: false
+    freeze: false
+
+  perceptual_grouping:
+    feature_dim: ${models.perceptual_grouping.object_dim}
+    object_dim: ${models.conditioning.object_dim}
+    kvq_dim: ${models.perceptual_grouping.object_dim}
+    positional_embedding:
+      _target_: ocl.neural_networks.wrappers.Sequential
+      _args_:
+        - _target_: ocl.neural_networks.positional_embedding.SoftPositionEmbed
+          n_spatial_dims: 2
+          feature_dim: 512
+          savi_style: true
+        - _target_: ocl.neural_networks.build_two_layer_mlp
+          input_dim: 512
+          output_dim: ${models.perceptual_grouping.object_dim}
+          hidden_dim: ${models.perceptual_grouping.object_dim}
+          initial_layer_norm: true
+    ff_mlp:
+      _target_: ocl.neural_networks.build_two_layer_mlp
+      input_dim: ${models.perceptual_grouping.object_dim}
+      output_dim: ${models.perceptual_grouping.object_dim}
+      hidden_dim: "${eval_lambda:'lambda dim: 2 * dim', ${.input_dim}}"
+      initial_layer_norm: true
+      residual: true
+
+  object_decoder:
+    _target_: ocl.decoding.SlotAttentionDecoder
+    final_activation: tanh
+    decoder:
+      _target_: ocl.decoding.get_savi_decoder_backbone
+      object_dim: ${models.perceptual_grouping.object_dim}
+      larger_input_arch: true
+      channel_multiplier: 1
+    positional_embedding:
+      _target_: ocl.neural_networks.positional_embedding.SoftPositionEmbed
+      n_spatial_dims: 2
+      feature_dim: ${models.perceptual_grouping.object_dim}
+      cnn_channel_order: true
+      savi_style: true
+    object_features_path: perceptual_grouping.objects
+
+plugins:
+  optimize_parameters:
+    optimizer:
+      lr: 0.0002
+    lr_scheduler:
+      warmup_steps: 2500
+      T_max: ${trainer.max_steps}
+
+losses:
+  mse:
+    _target_: ocl.losses.ReconstructionLoss
+    loss_type: mse
+    input_path: object_decoder.reconstruction
+    target_path: input.image
+
+visualizations:
+  input:
+    _target_: ocl.visualizations.Image
+    denormalization: "${lambda_fn:'lambda t: t * 0.5 + 0.5'}"
+    image_path: input.image
+  reconstruction:
+    _target_: ocl.visualizations.Image
+    denormalization: ${..input.denormalization}
+    image_path: object_decoder.reconstruction
+  objects:
+    _target_: ocl.visualizations.VisualObject
+    denormalization: ${..input.denormalization}
+    object_path: object_decoder.object_reconstructions
+    mask_path: object_decoder.masks
+  pred_segmentation:
+    _target_: ocl.visualizations.Segmentation
+    denormalization: ${..input.denormalization}
+    image_path: input.image
+    mask_path: object_decoder.masks

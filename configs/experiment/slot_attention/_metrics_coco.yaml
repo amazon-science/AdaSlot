@@ -1,0 +1,36 @@
+# @package _global_
+# Metrics for COCO-like datasets
+defaults:
+  - /metrics/ari_metric@evaluation_metrics.instance_mask_ari
+  - /metrics/unsupervised_mask_iou_metric@evaluation_metrics.instance_mask_iou
+  - /metrics/unsupervised_mask_iou_metric@evaluation_metrics.segmentation_mask_iou
+  - /metrics/average_best_overlap_metric@evaluation_metrics.instance_mask_abo
+  - /metrics/average_best_overlap_metric@evaluation_metrics.segmentation_mask_abo
+  - /metrics/mask_corloc_metric@evaluation_metrics.instance_mask_corloc
+
+evaluation_metrics:
+  instance_mask_ari:
+    prediction_path: object_decoder.masks
+    target_path: input.instance_mask
+    foreground: false
+    ignore_overlaps: true
+    convert_target_one_hot: true
+  instance_mask_iou:
+    prediction_path: object_decoder.masks
+    target_path: input.instance_mask
+    ignore_overlaps: true
+  segmentation_mask_iou:
+    prediction_path: object_decoder.masks
+    target_path: input.segmentation_mask
+  instance_mask_abo:
+    prediction_path: object_decoder.masks
+    target_path: input.instance_mask
+    ignore_overlaps: true
+  segmentation_mask_abo:
+    prediction_path: object_decoder.masks
+    target_path: input.segmentation_mask
+  instance_mask_corloc:
+    prediction_path: object_decoder.masks
+    target_path: input.instance_mask
+    use_threshold: False
+    ignore_overlaps: true

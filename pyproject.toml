@@ -1,0 +1,74 @@
+[tool.poetry]
+name = "ocl"
+version = "0.1.0"
+description = ""
+authors = ["Max Horn <hornmax@amazon.de>"]
+
+[tool.poetry.scripts]
+ocl_train = "ocl.cli.train:train"
+ocl_eval = "ocl.cli.eval:evaluate"
+ocl_compute_dataset_size = "ocl.cli.compute_dataset_size:compute_size"
+
+[tool.poetry.dependencies]
+python = ">=3.7.1,<3.9"
+webdataset = "^0.1.103"
+# There seems to be an issue in torch 1.12.x with masking and multi-head
+# attention. This prevents the usage of makes without a batch dimension.
+# Staying with torch 1.11.x version for now.
+torch = "1.12.*"
+pytorch-lightning = "^1.5.10"
+hydra-zen = "^0.7.0"
+torchtyping = "^0.1.4"
+hydra-core = "^1.2.0"
+pluggy = "^1.0.0"
+importlib-metadata = "4.2"
+torchvision = "0.13.*"
+Pillow = "9.0.1"  # Newer versions of pillow seem to result in segmentation faults.
+torchmetrics = "^0.8.1"
+matplotlib = "^3.5.1"
+moviepy = "^1.0.3"
+scipy = "<=1.8"
+awscli = "^1.22.90"
+scikit-learn = "^1.0.2"
+pyamg = "^4.2.3"
+botocore = { extras = ["crt"], version = "^1.27.22" }
+timm = {version = "0.6.7", optional = true}
+hydra-submitit-launcher = { version = "^1.2.0", optional = true }
+decord = "0.6.0"
+motmetrics = "^1.2.5"
+
+ftfy = {version = "^6.1.1", optional = true}
+regex = {version = "^2022.7.9", optional = true}
+mlflow = {version = "^1.29.0", optional = true}
+einops = "^0.6.0"
+jupyter = "^1.0.0"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+pytest = "^7.0.1"
+flake8 = "^4.0.1"
+flake8-isort = "^4.1.1"
+pre-commit = "^2.17.0"
+flake8-tidy-imports = "^4.6.0"
+flake8-bugbear = "^22.1.11"
+flake8-docstrings = "^1.6.0"
+
+[tool.poetry.extras]
+timm = ["timm"]
+clip = ["clip", "ftfy", "regex"]
+submitit = ["hydra-submitit-launcher"]
+mlflow = ["mlflow"]
+
+[build-system]
+requires = ["poetry-core<=1.0.4"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 101
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+line_length = 101
+skip_gitignore = true
+remove_redundant_aliases = true

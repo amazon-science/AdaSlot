@@ -1,0 +1,34 @@
+# @package _global_
+defaults:
+  - /plugins/multi_element_preprocessing@plugins.03_preprocessing
+  - _self_
+
+
+plugins:
+  03_preprocessing:
+    training_transforms:
+      image:
+        _target_: torchvision.transforms.Compose
+        transforms:
+          - _target_: torchvision.transforms.ToTensor
+          - _target_: torchvision.transforms.Resize
+            size: 128
+          - _target_: torchvision.transforms.Normalize
+            mean: [0.5, 0.5, 0.5]
+            std: [0.5, 0.5, 0.5]
+    evaluation_transforms:
+      image:
+        _target_: torchvision.transforms.Compose
+        transforms:
+          - _target_: torchvision.transforms.ToTensor
+          - _target_: torchvision.transforms.Resize
+            size: 128
+          - _target_: torchvision.transforms.Normalize
+            mean: [0.5, 0.5, 0.5]
+            std: [0.5, 0.5, 0.5]
+      mask:
+        _target_: torchvision.transforms.Compose
+        transforms:
+          - _target_: ocl.preprocessing.MultiMaskToTensor
+          - _target_: ocl.preprocessing.ResizeNearestExact
+            size: 128

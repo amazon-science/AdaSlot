@@ -1,0 +1,23 @@
+# @package _global_
+# Metrics for CLEVR-like datasets
+defaults:
+  - /metrics/ari_metric@evaluation_metrics.ari
+  - /metrics/average_best_overlap_metric@evaluation_metrics.abo
+  - /metrics/ari_metric@evaluation_metrics.ari_bg
+  - /metrics/average_best_overlap_metric@evaluation_metrics.abo_bg
+evaluation_metrics:
+  ari:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+  abo:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    ignore_background: true
+  ari_bg:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    foreground: false
+  abo_bg:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    ignore_background: false

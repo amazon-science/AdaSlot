@@ -1,0 +1,116 @@
+# @package _global_
+defaults:
+  - /conditioning/random@models.conditioning
+  - /experiment/projects/bridging/dinosaur/_base_feature_recon_gumbel
+  - /neural_networks/mlp@models.object_decoder.decoder
+  - /dataset: coco
+  - /experiment/projects/bridging/dinosaur/_preprocessing_coco_dino_feature_recon_ccrop
+  - /experiment/projects/bridging/dinosaur/_metrics_coco
+  - /metrics/tensor_statistic@evaluation_metrics.hard_keep_decision
+  - /metrics/tensor_statistic@evaluation_metrics.slots_keep_prob
+  - /metrics/ami_metric@evaluation_metrics.ami
+  - /metrics/nmi_metric@evaluation_metrics.nmi
+  - /metrics/purity_metric@evaluation_metrics.purity
+  - /metrics/precision_metric@evaluation_metrics.precision
+  - /metrics/recall_metric@evaluation_metrics.recall
+  - /metrics/f1_metric@evaluation_metrics.f1
+  - _self_
+
+# The following parameters assume training on 8 GPUs, leading to an effective batch size of 64.
+trainer:
+  gpus: 8
+  max_steps: 500000
+  max_epochs: null
+  strategy: ddp
+
+dataset:
+  num_workers: 4
+  batch_size: 8
+
+models:
+  _target_: ocl.models.image_grouping_adaslot.GroupingImgGumbel
+  conditioning:
+    n_slots: 33
+    object_dim: 256
+
+  feature_extractor:
+    model_name: vit_base_patch16_224_dino
+    pretrained: true
+    freeze: true
+
+  perceptual_grouping:
+    input_dim: 768
+    low_bound: 0
+
+  object_decoder:
+    _target_: ocl.decoding.PatchDecoderGumbelV1
+    decoder:
+      features: [2048, 2048, 2048]
+    left_mask_path: None
+    mask_type: mask_normalized
+
+losses:
+  sparse_penalty:
+    _target_: ocl.losses.SparsePenalty
+    linear_weight: 0.1
+    quadratic_weight: 0.0
+    quadratic_bias: 0.5
+    input_path: hard_keep_decision
+
+evaluation_metrics:
+  hard_keep_decision:
+    path: hard_keep_decision
+    reduction: sum
+  
+  slots_keep_prob:
+    path: slots_keep_prob
+    reduction: mean
+
+  ami:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    foreground: true
+    convert_target_one_hot: true
+    ignore_overlaps: true
+    back_as_class: false
+
+  nmi:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    foreground: true
+    convert_target_one_hot: true
+    ignore_overlaps: true
+    back_as_class: false
+  
+  purity:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    foreground: true
+    convert_target_one_hot: true
+    ignore_overlaps: true
+    back_as_class: false
+  
+  precision:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    foreground: true
+    convert_target_one_hot: true
+    ignore_overlaps: true
+    back_as_class: false
+  
+  recall:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    foreground: true
+    convert_target_one_hot: true
+    ignore_overlaps: true
+    back_as_class: false
+  
+  f1:
+    prediction_path: object_decoder.masks_as_image
+    target_path: input.instance_mask
+    foreground: true
+    convert_target_one_hot: true
+    ignore_overlaps: true
+    back_as_class: false
+

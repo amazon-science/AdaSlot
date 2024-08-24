@@ -1,0 +1,13 @@
+# @package _global_
+defaults:
+  - /metrics/ari_metric@evaluation_metrics.ari
+  - /metrics/average_best_overlap_metric@evaluation_metrics.abo
+
+evaluation_metrics:
+  ari:
+    prediction_path: masks_as_image
+    target_path: input.mask
+  abo:
+    prediction_path: masks_as_image
+    target_path: input.mask
+    ignore_background: true

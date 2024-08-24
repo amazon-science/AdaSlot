@@ -1,0 +1,10 @@
+# Image dataset CLEVR based on https://github.com/deepmind/multi_object_datasets .
+defaults:
+  - webdataset
+
+train_shards: ${s3_pipe:"s3://multi-object-webdatasets/clevr_with_masks/train/shard-{000000..000131}.tar"}
+train_size: 80000
+val_shards: ${s3_pipe:"s3://multi-object-webdatasets/clevr_with_masks/val/shard-{000000..000016}.tar"}
+val_size: 10000
+test_shards: ${s3_pipe:"s3://multi-object-webdatasets/clevr_with_masks/test/shard-{000000..000016}.tar"}
+test_size: 10000

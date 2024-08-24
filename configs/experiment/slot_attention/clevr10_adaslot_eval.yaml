@@ -1,0 +1,105 @@
+# @package _global_
+defaults:
+  - /experiment/slot_attention/_base_gumbel
+  - /dataset: clevr
+  - /experiment/slot_attention/_preprocessing_clevr
+  - /experiment/slot_attention/_metrics_clevr
+  - /metrics/tensor_statistic@evaluation_metrics.hard_keep_decision
+  - /metrics/tensor_statistic@evaluation_metrics.slots_keep_prob
+  - /metrics/ami_metric@evaluation_metrics.ami
+  - /metrics/nmi_metric@evaluation_metrics.nmi
+  - /metrics/purity_metric@evaluation_metrics.purity
+  - /metrics/precision_metric@evaluation_metrics.precision
+  - /metrics/recall_metric@evaluation_metrics.recall
+  - /metrics/f1_metric@evaluation_metrics.f1
+  - /metrics/mask_corloc_metric@evaluation_metrics.instance_mask_corloc
+  - _self_
+
+# The following parameters assume training on 8 GPUs, leading to an effective batch size of 64.
+trainer:
+  gpus: 8
+  max_steps: 500000
+  max_epochs: null
+  strategy: ddp
+dataset:
+  num_workers: 4
+  batch_size: 8
+
+models:
+  _target_: ocl.models.image_grouping_adaslot_pixel.GroupingImgGumbel
+  conditioning:
+    n_slots: 11
+  
+  perceptual_grouping:
+    low_bound: 0
+
+  object_decoder:
+    _target_: ocl.decoding.SlotAttentionDecoderGumbel
+    left_mask_path: None
+    mask_type: mask_normalized
+
+losses:
+  sparse_penalty:
+    _target_: ocl.losses.SparsePenalty
+    linear_weight: 10
+    quadratic_weight: 0.0
+    quadratic_bias: 0.5
+    input_path: hard_keep_decision
+
+evaluation_metrics:
+  hard_keep_decision:
+    path: hard_keep_decision
+    reduction: sum
+  
+  slots_keep_prob:
+    path: slots_keep_prob
+    reduction: mean
+
+  ami:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    foreground: true
+    convert_target_one_hot: false
+    ignore_overlaps: false
+
+  nmi:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    foreground: true
+    convert_target_one_hot: false
+    ignore_overlaps: false
+  
+  purity:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    foreground: true
+    convert_target_one_hot: false
+    ignore_overlaps: false
+  
+  precision:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    foreground: true
+    convert_target_one_hot: false
+    ignore_overlaps: false
+  
+  recall:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    foreground: true
+    convert_target_one_hot: false
+    ignore_overlaps: false
+  
+  f1:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    foreground: true
+    convert_target_one_hot: false
+    ignore_overlaps: false
+
+  instance_mask_corloc:
+    prediction_path: object_decoder.masks
+    target_path: input.mask
+    use_threshold: False
+    ignore_background: True
+    ignore_overlaps: False

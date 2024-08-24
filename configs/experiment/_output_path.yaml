@@ -1,0 +1,8 @@
+# @package hydra
+
+run:
+  dir: ${oc.select:experiment.root_output_folder,outputs}/${hydra:runtime.choices.experiment}/${now:%Y-%m-%d_%H-%M-%S}
+sweep:
+  dir: ${oc.select:experiment.root_output_folder,multirun}
+  subdir: ${hydra:runtime.choices.experiment}/${now:%Y-%m-%d_%H-%M-%S}
+output_subdir: config

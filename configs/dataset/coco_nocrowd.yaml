@@ -1,0 +1,12 @@
+# The coco2017 dataset with instance, stuff and caption annotations.
+# Validation dataset does not contain any crowd annotations.
+defaults:
+  - webdataset
+
+train_shards: ${dataset_prefix:"coco2017/train/shard-{000000..000412}.tar"}
+train_size: 118287
+val_shards: ${dataset_prefix:"coco2017/val_nocrowd/shard-{000000..000017}.tar"}
+val_size: 5000
+test_shards: ${dataset_prefix:"coco2017/test/shard-{000000..000126}.tar"}
+test_size: 40670
+use_autopadding: true

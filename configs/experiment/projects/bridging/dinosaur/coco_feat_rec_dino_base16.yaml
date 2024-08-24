@@ -1,0 +1,38 @@
+# @package _global_
+defaults:
+  - /conditioning/random@models.conditioning
+  - /experiment/projects/bridging/dinosaur/_base_feature_recon
+  - /neural_networks/mlp@models.object_decoder.decoder
+  - /dataset: coco
+  - /experiment/projects/bridging/dinosaur/_preprocessing_coco_dino_feature_recon_ccrop
+  - /experiment/projects/bridging/dinosaur/_metrics_coco
+  - _self_
+
+# The following parameters assume training on 8 GPUs, leading to an effective batch size of 64.
+trainer:
+  gpus: 8
+  max_steps: 200000
+  max_epochs: null
+  strategy: ddp
+
+dataset:
+  num_workers: 4
+  batch_size: 8
+
+models:
+  conditioning:
+    n_slots: 7
+    object_dim: 256
+
+  feature_extractor:
+    model_name: vit_base_patch16_224_dino
+    pretrained: true
+    freeze: true
+
+  perceptual_grouping:
+    input_dim: 768
+
+  object_decoder:
+    _target_: ocl.decoding.PatchDecoder
+    decoder:
+      features: [2048, 2048, 2048]

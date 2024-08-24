@@ -1,0 +1,25 @@
+# @package _global_
+# Image dataset containing subsampled frames from MOVI_C dataset.
+defaults:
+  - /dataset/movi_c
+  - /plugins/sample_frames_from_video@plugins.02_sample_frames
+  - _self_
+
+dataset:
+  # Values derived from running `bin/compute_dataset_size.py`.
+  train_size: 87633
+  val_size: 6000
+  test_size: 6000
+
+plugins:
+  02_sample_frames:
+    n_frames_per_video: 9
+    n_eval_frames_per_video: -1
+    training_fields:
+      - image
+    evaluation_fields:
+      - image
+      - mask
+    dim: 0
+    seed: 457834752
+    shuffle_buffer_size: 1000

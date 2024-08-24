@@ -1,0 +1,31 @@
+# @package _global_
+defaults:
+  - webdataset@dataset
+  - _self_
+
+dataset:
+  train_shards: "/home/ubuntu/movi_c/train/shard-{000000..000298}.tar"
+  train_size: 9737
+  val_shards: "/home/ubuntu/movi_c/val/shard-{000000..000007}.tar"
+  val_size: 250
+  test_shards: "/home/ubuntu/movi_c/val/shard-{000000..000007}.tar"
+  test_size: 250
+  use_autopadding: true
+
+plugins:
+  00_1_rename_fields:
+    _target_: ocl.plugins.RenameFields
+    train_mapping:
+      video: image
+    evaluation_mapping:
+      video: image
+      segmentations: mask
+  00_2_adapt_mask_format:
+    _target_: ocl.plugins.SingleElementPreprocessing
+    training_transform: null
+    evaluation_transform:
+      _target_: ocl.preprocessing.IntegerToOneHotMask
+      output_axis: -4
+      max_instances: 10
+      ignore_typical_background: false
+    element_key: mask
