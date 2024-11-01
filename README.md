@@ -13,7 +13,7 @@ This is the official implementation of the CVPR'24 paper [Adaptive Slot Attentio
 Object-centric learning (OCL) uses slots to extract object representations, enhancing flexibility and interpretability. Slot attention, a common OCL method, refines slot representations with attention mechanisms but requires predefined slot numbers, ignoring object variability. To address this, a novel complexity-aware object auto-encoder framework introduces adaptive slot attention (AdaSlot), dynamically determining the optimal slot count based on data content through a discrete slot sampling module. A masked slot decoder suppresses unselected slots during decoding. Extensive testing shows this framework matches or exceeds fixed-slot models, adapting slot numbers based on instance complexity and promising further research opportunities.
 
 ## News!
-- [2024.11.02] We released the pre-trained checkpoints! Please find them at this [link](https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls)!
+- [2024.11.02] We released the pre-trained checkpoints! Please find them at this [link](https://drive.google.com/drive/folders/1SRKE9Q5XF2UeYj1XB8kyjxORDmB7c7Mz)!
 - [2024.08.24] We open-sourced the code!
 
 ## Development Setup
